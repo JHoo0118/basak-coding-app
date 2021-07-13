@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "754505743943",
+    "project_id": "basakcoding-1bd3c",
+    "storage_bucket": "basakcoding-1bd3c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:754505743943:android:3c3c1f4f19df54164b7b62",
+        "android_client_info": {
+          "package_name": "com.kosmo.basakcoding"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "754505743943-fveq9o2d9cnku8pbtsvi86o7dq5ai2b8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCe42hLSp3yFTvC3CeSNHRXIYj3OgG8vRU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "754505743943-fveq9o2d9cnku8pbtsvi86o7dq5ai2b8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

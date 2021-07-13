@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <item
+        android:id="@+id/catalog"
+        android:icon="@drawable/ic_catalog"
+        android:title="홈"
+        app:cnb_iconColor="@color/colorAccent" />
+    <item
+        android:id="@+id/myCourse"
+        android:icon="@drawable/ic_play"
+        android:title="내 학습"
+        app:cnb_iconColor="@color/colorAccent" />
+    <item
+        android:id="@+id/myAccount"
+        android:icon="@drawable/ic_account"
+        android:title="계정"
+        app:cnb_iconColor="@color/colorAccent" />
+
+</menu>
