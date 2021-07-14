@@ -39,7 +39,6 @@ public class CatalogFragment extends Fragment {
     private PreferenceManager preferenceManager;
     private RecyclerView recyclerView;
     private CoursesAdapter CoursesAdapter;
-    private ProgressBar CoursesProgressBar;
 
     public CatalogFragment(PreferenceManager preferenceManager) {
         CoursesService = ApiClient.getRetrofit().create(CoursesService.class);
@@ -57,13 +56,10 @@ public class CatalogFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        recyclerView = view.findViewById(R.id.CourseRV);
-        CoursesProgressBar = view.findViewById(R.id.CoursePB);
-
-        CoursesProgressBar.setVisibility(View.VISIBLE);
+        recyclerView = view.findViewById(R.id.Course);
 
 
-        Call<List<HashMap>> call = CoursesService.getCoursesList(preferenceManager.getString(KEY_MEMBER_ID));
+        Call<List<HashMap>> call = CoursesService.getCoursesList();
         call.enqueue(new Callback<List<HashMap>>() {
             @Override
             public void onResponse(Call<List<HashMap>> call, Response<List<HashMap>> response) {
@@ -83,7 +79,6 @@ public class CatalogFragment extends Fragment {
             }
         });
 
-        CoursesProgressBar.setVisibility(View.INVISIBLE);
 
 //        ProgressBar courseProgress = (ProgressBar) getView().findViewById(R.id.courseProgress);
 //        courseProgress.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent, getActivity().getTheme())));

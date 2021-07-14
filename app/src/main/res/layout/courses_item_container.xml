@@ -51,7 +51,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textAdminName"
+        android:id="@+id/textCatName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/_10sdp"
@@ -59,7 +59,7 @@
         android:fontFamily="@font/notosanskr_regular"
         android:includeFontPadding="false"
         android:paddingBottom="@dimen/_6sdp"
-        android:text="바삭강사"
+        android:text="HTML/CSS"
         android:textColor="@color/colorGray"
         android:textSize="@dimen/_10ssp"
         android:textStyle="bold"
@@ -81,8 +81,8 @@
         android:textSize="@dimen/_10ssp"
         android:textStyle="bold"
         app:layout_constraintLeft_toRightOf="@id/thumbnail"
-        app:layout_constraintRight_toRightOf="@id/textAdminName"
-        app:layout_constraintTop_toBottomOf="@id/textAdminName" />
+        app:layout_constraintRight_toRightOf="@id/textCatName"
+        app:layout_constraintTop_toBottomOf="@id/textCatName" />
 
 
 

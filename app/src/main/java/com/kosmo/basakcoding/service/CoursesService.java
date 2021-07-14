@@ -15,9 +15,7 @@ import retrofit2.http.Query;
 
 public interface CoursesService {
 
-    @POST("courses")
-    Call<CatalogDTO> getCoursesList(@Body LoginDTO dto);
+    @GET("courses")
+    public Call<List<HashMap>> getCoursesList();
 
-    @GET("course")
-    public Call<List<HashMap>> getCoursesList(@Query("title") String title);
 }
