@@ -40,8 +40,8 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         HashMap item = items.get(position);
         holder.textTitle.setText(item.get("TITLE").toString());
-        holder.textAdminName.setText(item.get("NAME").toString());
-        holder.textShortDescription.setText(item.get("SHORTDESCRIPTION").toString());
+        holder.textCatName.setText(item.get("CAT_NAME").toString());
+        holder.textShortDescription.setText(item.get("SHORT_DESCRIPTION").toString());
 
         // https://square.github.io/picasso/
         Picasso.get().load(KEY_BASE_URL + "/upload/course/" +
@@ -65,7 +65,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.ViewHold
 
         RoundedImageView thumbnail;
         TextView textTitle;
-        TextView textAdminName;
+        TextView textCatName;
         TextView textShortDescription;
         View viewBackground;
 
@@ -74,7 +74,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.ViewHold
             viewBackground = itemView.findViewById(R.id.viewBackground);
             thumbnail = itemView.findViewById(R.id.thumbnail);
             textTitle = itemView.findViewById(R.id.textTitle);
-            textAdminName = itemView.findViewById(R.id.textAdminName);
+            textCatName = itemView.findViewById(R.id.textCatName);
             textShortDescription = itemView.findViewById(R.id.textShortDescription);
         }
     }

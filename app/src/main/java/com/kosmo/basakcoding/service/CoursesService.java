@@ -15,12 +15,15 @@ import retrofit2.http.Query;
 
 public interface CoursesService {
 
-    @POST("courses")
-    Call<CatalogDTO> getCoursesList(@Body LoginDTO dto);
+    @GET("courses")
+    public Call<List<HashMap>> getCoursesList();
 
+<<<<<<< HEAD
     @GET("course")
     public Call<List<HashMap>> getCoursesList(@Query("title") String title);
 
     @GET("course/detail")
     public Call<HashMap> getCourseDetail(@Query("courseId") String courseId);
+=======
+>>>>>>> b5a046886c9df05bdef1ee3dce784092480dc94a
 }
