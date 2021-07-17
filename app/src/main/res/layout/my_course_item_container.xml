@@ -76,7 +76,7 @@
         android:max="100"
         android:progress="20"
         android:progressBackgroundTint="@color/colorGrayLight"
-        android:progressTint="@color/colorAccent"
+        android:progressTint="@color/colorTextAccent"
         app:layout_constraintLeft_toRightOf="@id/thumbnail"
         app:layout_constraintRight_toRightOf="@id/textAdminName"
         app:layout_constraintTop_toBottomOf="@id/textAdminName" />

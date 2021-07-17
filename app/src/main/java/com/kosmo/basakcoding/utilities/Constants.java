@@ -10,8 +10,6 @@ public class Constants {
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_FCM_TOKEN = "fcm_token";
 
-
-
     public static final String KEY_PREFERENCE_NAME = "BasakCodingPreference";
     public static final String KEY_IS_SIGNED_IN = "isSignedIn";
 }

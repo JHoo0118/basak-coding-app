@@ -20,4 +20,7 @@ public interface CoursesService {
 
     @GET("course")
     public Call<List<HashMap>> getCoursesList(@Query("title") String title);
+
+    @GET("course/detail")
+    public Call<HashMap> getCourseDetail(@Query("courseId") String courseId);
 }

@@ -66,7 +66,6 @@ public class MyCourseFragment extends Fragment {
             public void onResponse(Call<List<HashMap>> call, Response<List<HashMap>> response) {
                 if (response.isSuccessful()) {
                     myCourseList = response.body();
-                    Log.i(TAG, myCourseList+"");
                     myCourseAdapter = new MyCourseAdapter(getContext(), myCourseList);
 
                     recyclerView.setAdapter(myCourseAdapter);

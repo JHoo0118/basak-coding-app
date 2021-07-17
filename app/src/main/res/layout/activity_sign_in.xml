@@ -184,7 +184,7 @@
             android:includeFontPadding="false"
             android:padding="@dimen/_6sdp"
             android:text="회원가입"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/colorTextAccent"
             android:textSize="@dimen/_14ssp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textNoAccount"

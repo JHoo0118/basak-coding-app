@@ -245,7 +245,7 @@
                 android:includeFontPadding="false"
                 android:padding="@dimen/_6sdp"
                 android:text="로그인"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/colorTextAccent"
                 android:textSize="@dimen/_14ssp"
                 app:layout_constraintBottom_toBottomOf="parent" />
 

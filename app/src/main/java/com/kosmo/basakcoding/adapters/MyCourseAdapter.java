@@ -1,6 +1,7 @@
 package com.kosmo.basakcoding.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kosmo.basakcoding.R;
+import com.kosmo.basakcoding.activities.CourseDetailActivity;
+import com.kosmo.basakcoding.activities.SignUpActivity;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
@@ -54,6 +57,9 @@ public class MyCourseAdapter extends RecyclerView.Adapter<MyCourseAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, items.get(position).get("TITLE").toString(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(v.getContext(), CourseDetailActivity.class);
+                intent.putExtra("COURSE_ID", items.get(position).get("COURSE_ID").toString());
+                v.getContext().startActivity(intent);
             }
         });
     }
