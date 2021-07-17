@@ -22,6 +22,7 @@ import com.kosmo.basakcoding.R;
 import com.kosmo.basakcoding.fragments.CatalogFragment;
 import com.kosmo.basakcoding.fragments.MyAccountFragment;
 import com.kosmo.basakcoding.fragments.MyCourseFragment;
+import com.kosmo.basakcoding.fragments.MyPageFragment;
 import com.kosmo.basakcoding.utilities.Constants;
 import com.kosmo.basakcoding.utilities.PreferenceManager;
 
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.myAccount:
-                        fragment = new MyAccountFragment();
+                        fragment = new MyPageFragment(preferenceManager);
                         break;
                 }
 

@@ -1,7 +1,7 @@
 package com.kosmo.basakcoding.utilities;
 
 public class Constants {
-    public static final String KEY_BASE_URL = "http://192.168.219.101:9090";
+    public static final String KEY_BASE_URL = "http://192.168.0.3:9090";
 
     public static final String KEY_COLLECTION_MEMBER = "member";
     public static final String KEY_MEMBER_ID = "member_id";
