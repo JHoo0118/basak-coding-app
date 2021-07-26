@@ -22,6 +22,6 @@ public interface CoursesService {
     public Call<List<HashMap>> getCoursesList(@Query("title") String title);
 
     @GET("course/detail")
-    public Call<HashMap> getCourseDetail(@Query("courseId") String courseId);
+    public Call<HashMap> getCourseDetail(@Query("memberId") String memberId, @Query("courseId") String courseId);
 
 }

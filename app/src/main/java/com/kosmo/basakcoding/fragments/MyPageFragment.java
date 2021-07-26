@@ -89,7 +89,6 @@ public class MyPageFragment extends Fragment {
             public void onResponse(Call<HashMap> call, Response<HashMap> response) {
                 if (response.isSuccessful()) {
                     MyPage = response.body();
-                    Log.i(TAG, MyPage + "");
 
                     textUserName.setText(MyPage.get("USERNAME").toString());
                     textEmail.setText(MyPage.get("EMAIL").toString());

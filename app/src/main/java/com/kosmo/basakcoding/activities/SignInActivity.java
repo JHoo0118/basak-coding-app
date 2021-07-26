@@ -114,7 +114,6 @@ public class SignInActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
 
                     MemberDTO member = response.body();
-                    Log.i(TAG, "이메일:"+member.getEmail());
                     preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
                     preferenceManager.putString(Constants.KEY_MEMBER_ID, Integer.toString(member.getMemberId()));
                     preferenceManager.putString(Constants.KEY_USERNAME, member.getUsername());
