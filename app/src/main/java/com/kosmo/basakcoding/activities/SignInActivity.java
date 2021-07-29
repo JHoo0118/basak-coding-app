@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -50,7 +51,12 @@ public class SignInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
-
+        Intent signUpintent = getIntent();
+        if(!TextUtils.isEmpty(signUpintent.getStringExtra("newEmail"))){
+            String email = signUpintent.getStringExtra("newEmail");
+            inputEmail = findViewById(R.id.inputEmail);
+            inputEmail.setText(String.valueOf(email));
+        }
 
         preferenceManager = new PreferenceManager(getApplicationContext());
 
