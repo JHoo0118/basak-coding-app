@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -20,13 +21,16 @@ import com.kosmo.basakcoding.service.ApiClient;
 import com.kosmo.basakcoding.service.MyPageService;
 import com.kosmo.basakcoding.utilities.PreferenceManager;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.kosmo.basakcoding.utilities.Constants.KEY_BASE_URL;
 import static com.kosmo.basakcoding.utilities.Constants.KEY_MEMBER_ID;
 
 public class MyPageFragment extends Fragment {
@@ -34,9 +38,11 @@ public class MyPageFragment extends Fragment {
     public static final String TAG = "basakcoding";
 
     private HashMap MyPage = new HashMap();
+    private HashMap UpDate = new HashMap();
+
     private MyPageService myPageService;
     private PreferenceManager preferenceManager;
-    RoundedImageView thumbnail;
+    RoundedImageView profile;
     TextView textUserName;
     TextView textEmail;
     View viewBackground;
@@ -58,12 +64,14 @@ public class MyPageFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         viewBackground = view.findViewById(R.id.viewBackground);
-        thumbnail = view.findViewById(R.id.thumbnail);
+        profile = view.findViewById(R.id.profile);
         textUserName = view.findViewById(R.id.textUserName);
         textEmail = view.findViewById(R.id.textEmail);
 
         preferenceManager = new PreferenceManager(getActivity().getApplicationContext());
         Button logoutBtn = (Button) getView().findViewById(R.id.logoutBtn);
+        Button updateBtn = (Button) getView().findViewById(R.id.updateBtn);
+
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,6 +101,10 @@ public class MyPageFragment extends Fragment {
 
                     textUserName.setText(MyPage.get("USERNAME").toString());
                     textEmail.setText(MyPage.get("EMAIL").toString());
+
+                    Picasso.get().load(KEY_BASE_URL + "/upload/member/" +
+                            MyPage.get("MEMBER_ID").toString() +"/" +
+                            MyPage.get("AVATAR").toString()).into(profile);
                 }
             }
 
@@ -101,6 +113,64 @@ public class MyPageFragment extends Fragment {
                 Log.i(TAG, "에러:" + t.getMessage());
             }
         });
+
+        updateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(getContext())
+                        .setTitle("회원정보 수정")
+                        .setMessage("수정 하시겠습니까?")
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                TextView username = view.findViewById(R.id.textUserName);
+                                TextView password = view.findViewById(R.id.password);
+                                TextView pwck = view.findViewById(R.id.pwck);
+                                Log.i(TAG, "username, password, pwck"+password.getText().toString().trim().equals(pwck.getText()));
+
+                                if (password.getText().toString().trim().equals(pwck.getText().toString().trim())) {
+                                    Map map = new HashMap();
+                                    map.put("memberId", preferenceManager.getString(KEY_MEMBER_ID));
+                                    map.put("username", username.getText().toString());
+                                    map.put("password", password.getText().toString());
+
+                                    Call<HashMap> update = myPageService.updateMember(map);
+                                    update.enqueue(new Callback<HashMap>() {
+                                        @Override
+                                        public void onResponse(Call<HashMap> call, Response<HashMap> response) {
+                                            if (response.isSuccessful()) {
+                                                UpDate = response.body();
+                                                Log.i(TAG, UpDate + "");
+
+                                                textUserName.setText(UpDate.get("username").toString());
+                                                textEmail.setText(MyPage.get("EMAIL").toString());
+
+
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<HashMap> call, Throwable t) {
+                                            Log.i(TAG, "에러:" + t.getMessage());
+
+                                        }
+                                    });
+                                }
+                                else {
+                                    Log.i(TAG, "회원정보수정실패");
+                                }
+                            }
+                        })
+                        .setNegativeButton("아니요", null)
+                        .show();
+            }
+        });
+
+
+
+
+
 
 
 //        ProgressBar courseProgress = (ProgressBar) getView().findViewById(R.id.courseProgress);

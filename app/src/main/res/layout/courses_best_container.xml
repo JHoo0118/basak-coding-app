@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".fragments.CatalogFragment">
+
+    <View
+        android:id="@+id/viewSupporter"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_10sdp"
+        app:layout_constraintTop_toBottomOf="@+id/viewBackground" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="지금 HOT한 강의"
+        android:id="@+id/bestTitle"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_20sdp"
+        android:paddingLeft="@dimen/_20sdp"
+        android:layout_marginBottom="@dimen/_30sdp"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <GridView
+        android:id="@+id/viewBackground"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#00000000"
+        android:numColumns="2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bestTitle"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/thumbnail"
+        android:layout_width="@dimen/_70sdp"
+        android:layout_height="@dimen/_70sdp"
+        android:layout_marginStart="@dimen/_30sdp"
+        android:scaleType="centerCrop"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bestTitle"
+        app:riv_corner_radius="@dimen/_4sdp" />
+
+    <TextView
+        android:id="@+id/textTitle"
+        android:layout_width="@dimen/_70sdp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_30sdp"
+        android:fontFamily="@font/notosanskr_medium"
+        android:includeFontPadding="false"
+        android:paddingBottom="@dimen/_5sdp"
+        android:text="강의명"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_13ssp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        app:layout_constraintTop_toBottomOf="@id/thumbnail"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
