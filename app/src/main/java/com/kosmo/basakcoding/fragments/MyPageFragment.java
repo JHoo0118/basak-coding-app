@@ -14,10 +14,12 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.kosmo.basakcoding.R;
 import com.kosmo.basakcoding.activities.SignInActivity;
 import com.kosmo.basakcoding.service.ApiClient;
 import com.kosmo.basakcoding.service.MyPageService;
+import com.kosmo.basakcoding.utilities.Constants;
 import com.kosmo.basakcoding.utilities.PreferenceManager;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -27,7 +29,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.kosmo.basakcoding.utilities.Constants.KEY_EMAIL;
+import static com.kosmo.basakcoding.utilities.Constants.KEY_GOOGLE_LOGIN;
 import static com.kosmo.basakcoding.utilities.Constants.KEY_MEMBER_ID;
+import static com.kosmo.basakcoding.utilities.Constants.KEY_USERNAME;
 
 public class MyPageFragment extends Fragment {
 
@@ -74,6 +79,7 @@ public class MyPageFragment extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 preferenceManager.clearPreferences();
+                                FirebaseAuth.getInstance().signOut();
                                 startActivity(new Intent(getContext(), SignInActivity.class));
                                 getActivity().finish();
                             }
@@ -82,25 +88,34 @@ public class MyPageFragment extends Fragment {
                         .show();
             }
         });
+        Log.i(TAG, "뭐야:" + preferenceManager.getString(KEY_GOOGLE_LOGIN));
+        if (preferenceManager.getString(KEY_GOOGLE_LOGIN).equals("Y")) {
+            if (textUserName.getText().toString().trim().equals("닉네임")) {
+                textUserName.setText(preferenceManager.getString(KEY_USERNAME));
+            }
 
-        Call<HashMap> call = myPageService.getMyPageList(preferenceManager.getString(KEY_MEMBER_ID));
-        call.enqueue(new Callback<HashMap>() {
-            @Override
-            public void onResponse(Call<HashMap> call, Response<HashMap> response) {
-                if (response.isSuccessful()) {
-                    MyPage = response.body();
+            if (textEmail.getText().toString().trim().equals("이메일")) {
+                textEmail.setText(preferenceManager.getString(KEY_EMAIL));
+            }
+        } else {
+            Call<HashMap> call = myPageService.getMyPageList(preferenceManager.getString(KEY_MEMBER_ID));
+            call.enqueue(new Callback<HashMap>() {
+                @Override
+                public void onResponse(Call<HashMap> call, Response<HashMap> response) {
+                    if (response.isSuccessful()) {
+                        MyPage = response.body();
 
-                    textUserName.setText(MyPage.get("USERNAME").toString());
-                    textEmail.setText(MyPage.get("EMAIL").toString());
+                        textUserName.setText(MyPage.get("USERNAME").toString());
+                        textEmail.setText(MyPage.get("EMAIL").toString());
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<HashMap> call, Throwable t) {
-                Log.i(TAG, "에러:" + t.getMessage());
-            }
-        });
-
+                @Override
+                public void onFailure(Call<HashMap> call, Throwable t) {
+                    Log.i(TAG, "에러:" + t.getMessage());
+                }
+            });
+        }
 
 //        ProgressBar courseProgress = (ProgressBar) getView().findViewById(R.id.courseProgress);
 //        courseProgress.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent, getActivity().getTheme())));

@@ -44,8 +44,9 @@
                     android:layout_height="@dimen/_12sdp"
                     android:layout_marginRight="@dimen/_4sdp"
                     android:background="@drawable/ic_check_circle"
-                    android:backgroundTint="@color/colorTextAccent"
+                    android:backgroundTint="@color/colorPurple"
                     android:visibility="gone"
+
                     android:padding="@dimen/_3sdp" />
 
                 <TextView
@@ -66,7 +67,7 @@
                 android:fontFamily="@font/notosanskr_medium"
                 android:includeFontPadding="false"
                 android:text="동영상~08:10"
-                android:textColor="@color/colorGray"
+                android:textColor="#99000000"
                 android:textSize="@dimen/_10ssp" />
 
         </LinearLayout>

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.view.WindowManager;
@@ -42,6 +43,10 @@ import static com.kosmo.basakcoding.utilities.Constants.KEY_BASE_URL;
 public class CourseVideoActivity extends AppCompatActivity {
     public static final String TAG = "basakcoding";
     private HashMap video = new HashMap();
+
+    public static int lastTappedPosition = -1;
+    public static String currPlayingVideoId = null;
+    public static ViewParent tappedParentView = null;
 
     PlayerView playerView;
     SimpleExoPlayer player;
@@ -112,40 +117,39 @@ public class CourseVideoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_course_video);
 
-        // 아이디 얻기
+        // 초기화
         doInitialize();
 
         Intent intent = getIntent();
         String courseId = intent.getStringExtra("COURSE_ID");
-        String videoId = intent.getStringExtra("VIDEO_ID");
         String title = intent.getStringExtra("TITLE");
         String adminName = intent.getStringExtra("ADMIN_NAME");
 
-        preferenceManager = new PreferenceManager(getApplicationContext());
-        videoService = ApiClient.getRetrofit().create(VideoService.class);
-        recyclerView = findViewById(R.id.currRV);
 
-        Call<HashMap> call = videoService.getVideo(preferenceManager.getString(Constants.KEY_MEMBER_ID), courseId, videoId);
+        Call<HashMap> call = videoService.getVideo(preferenceManager.getString(Constants.KEY_MEMBER_ID), courseId);
         call.enqueue(new Callback<HashMap>() {
             @Override
             public void onResponse(Call<HashMap> call, Response<HashMap> response) {
                 if (response.isSuccessful()) {
                     video = response.body();
-                    
+
+                    currPlayingVideoId = video.get("LAST_VIDEO_ID").toString();
                     // 리사이클러 뷰
-                    List<HashMap> curriculumList =  (List<HashMap>) video.get("curriculum");
+                    List<HashMap> curriculumList = (List<HashMap>) video.get("curriculum");
                     int startIndex = 1;
-                    for (int i=0; i<curriculumList.size(); i++) {
+                    for (int i = 0; i < curriculumList.size(); i++) {
+                        curriculumList.get(i).put("cIndex", i + 1);
                         List<HashMap> videoList = (List<HashMap>) curriculumList.get(i).get("videos");
-                        for (int j=0; j<videoList.size(); j++) {
+                        for (int j = 0; j < videoList.size(); j++) {
                             videoList.get(j).put("index", startIndex++);
                             videoList.get(j).put("courseId", courseId);
                         }
                     }
 
-                    
+
                     HashMap currVideo = (HashMap) video.get("currVideo");
                     videoUri = currVideo.get("videoPath").toString();
                     textTitle.setText(title);
@@ -153,7 +157,7 @@ public class CourseVideoActivity extends AppCompatActivity {
 
                     initPlayer();
 
-                    curriculumListAdapter = new CurriculumListAdapter(getApplicationContext(), curriculumList, player);
+                    curriculumListAdapter = new CurriculumListAdapter(getApplicationContext(), curriculumList, player, currPlayingVideoId);
 
                     recyclerView.setAdapter(curriculumListAdapter);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -182,6 +186,13 @@ public class CourseVideoActivity extends AppCompatActivity {
     }
 
     private void doInitialize() {
+        lastTappedPosition = -1;
+        tappedParentView = null;
+
+        preferenceManager = new PreferenceManager(getApplicationContext());
+        videoService = ApiClient.getRetrofit().create(VideoService.class);
+        recyclerView = findViewById(R.id.currRV);
+
         playerView = findViewById(R.id.playerView);
         progressBar = findViewById(R.id.progress_bar);
         btnFullScreen = playerView.findViewById(R.id.btn_fullscreen);
@@ -209,6 +220,22 @@ public class CourseVideoActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.VISIBLE);
                 else if (state == Player.STATE_READY) {
                     progressBar.setVisibility(View.GONE);
+                } else if (state == Player.STATE_ENDED) {
+                    Call<Integer> result = videoService.updateSeen(preferenceManager.getString(Constants.KEY_MEMBER_ID), currPlayingVideoId);
+                    result.enqueue(new Callback<Integer>() {
+                        @Override
+                        public void onResponse(Call<Integer> call, Response<Integer> response) {
+                            if (response.isSuccessful()) {
+                                Log.i(TAG, currPlayingVideoId);
+                                recreate();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Integer> call, Throwable t) {
+                            Log.i(TAG, "에러:" + t.getMessage());
+                        }
+                    });
                 }
             }
         });

@@ -1,8 +1,15 @@
 package com.kosmo.basakcoding.activities;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,9 +19,20 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.Api;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -35,22 +53,52 @@ import retrofit2.Response;
 public class SignInActivity extends AppCompatActivity {
 
     public static final String TAG = "basakcoding";
+    public static final int RC_SIGN_IN = 100;
     private AuthService authService;
+    private FirebaseAuth mAuth;
+    private GoogleSignInClient googleSignInClient;
 
     public SignInActivity() {
         authService = ApiClient.getRetrofit().create(AuthService.class);
     }
 
     private EditText inputEmail, inputPassword;
-    private MaterialButton buttonSignIn;
+    private MaterialButton buttonSignIn, buttonGoogleSignIn;
     private ProgressBar signInProgressBar;
     private PreferenceManager preferenceManager;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            startActivity(new Intent(SignInActivity.this, MainActivity.class));
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
+        inputEmail = findViewById(R.id.inputEmail);
+        inputPassword = findViewById(R.id.inputPassword);
+        buttonSignIn = findViewById(R.id.buttonSignIn);
+        buttonGoogleSignIn = findViewById(R.id.buttonGoogleSignIn);
+        signInProgressBar = findViewById(R.id.signInProgressBar);
+
+        // 구글 계정으로 로그인 시작
+        mAuth = FirebaseAuth.getInstance();
+        requestGoogleSignIn();
+
+        buttonGoogleSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                googleSignIn();
+            }
+        });
+
+        // 구글 계정으로 로그인 끝
 
         preferenceManager = new PreferenceManager(getApplicationContext());
 
@@ -66,11 +114,6 @@ public class SignInActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
             }
         });
-
-        inputEmail = findViewById(R.id.inputEmail);
-        inputPassword = findViewById(R.id.inputPassword);
-        buttonSignIn = findViewById(R.id.buttonSignIn);
-        signInProgressBar = findViewById(R.id.signInProgressBar);
 
         Intent i = getIntent();
         String email = i.getStringExtra("email");
@@ -108,7 +151,7 @@ public class SignInActivity extends AppCompatActivity {
         body.setEmail(inputEmail.getText().toString());
         body.setPassword(inputPassword.getText().toString());
         Call<MemberDTO> call = authService.login(body);
-        call.enqueue(new Callback<MemberDTO>(){
+        call.enqueue(new Callback<MemberDTO>() {
             @Override
             public void onResponse(Call<MemberDTO> call, Response<MemberDTO> response) {
                 if (response.isSuccessful()) {
@@ -118,7 +161,7 @@ public class SignInActivity extends AppCompatActivity {
                     preferenceManager.putString(Constants.KEY_MEMBER_ID, Integer.toString(member.getMemberId()));
                     preferenceManager.putString(Constants.KEY_USERNAME, member.getUsername());
                     preferenceManager.putString(Constants.KEY_EMAIL, member.getEmail());
-                    preferenceManager.putString(Constants.KEY_USERNAME, member.getUsername());
+                    preferenceManager.putString(Constants.KEY_GOOGLE_LOGIN, "N");
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
@@ -135,6 +178,66 @@ public class SignInActivity extends AppCompatActivity {
                 Toast.makeText(SignInActivity.this, "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void requestGoogleSignIn() {
+        GoogleSignInOptions gso = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso);
+    }
+
+    // 구글 로그인 런쳐
+    ActivityResultLauncher<Intent> launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    Log.i(TAG, result.getResultCode() + "");
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
+
+                        Log.i(TAG, "여기");
+                        try {
+                            GoogleSignInAccount account = task.getResult(ApiException.class);
+                            firebaseAuthWithGoogle(account.getIdToken());
+                            preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
+                            preferenceManager.putString(Constants.KEY_MEMBER_ID, account.getId().substring(0, 6));
+                            preferenceManager.putString(Constants.KEY_USERNAME, account.getDisplayName());
+                            preferenceManager.putString(Constants.KEY_EMAIL, account.getEmail());
+                            preferenceManager.putString(Constants.KEY_GOOGLE_LOGIN, "Y");
+                            Log.i(TAG, account.getId() + " " + account.getDisplayName() + " " + account.getEmail());
+                        } catch (ApiException e) {
+                            Log.i(TAG, "구글 로그인 실패:" + e);
+                        }
+                    }
+                }
+            });
+
+    private void googleSignIn() {
+        Intent googleSignInIntent = googleSignInClient.getSignInIntent();
+        launcher.launch(googleSignInIntent);
+    }
+
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(SignInActivity.this, "구글 로그인 실패", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     private void signInWithFirebase() {

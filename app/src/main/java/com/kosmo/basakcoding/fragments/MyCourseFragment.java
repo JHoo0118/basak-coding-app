@@ -59,7 +59,6 @@ public class MyCourseFragment extends Fragment {
 
         myCourseProgressBar.setVisibility(View.VISIBLE);
 
-
         Call<List<HashMap>> call = myCourseService.getMyCouresList(preferenceManager.getString(KEY_MEMBER_ID));
         call.enqueue(new Callback<List<HashMap>>() {
             @Override

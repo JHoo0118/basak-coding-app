@@ -6,17 +6,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.kosmo.basakcoding.R;
+import com.kosmo.basakcoding.activities.CourseVideoActivity;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,13 +36,23 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.View
     private Context context;
     private List<HashMap> items;
     private SimpleExoPlayer player;
-//    List<ConstraintLayout> constraintLayoutList = new ArrayList<>();
+    private int lastTappedPosition = -1;
+    private String activeId;
+    RecyclerView currRecyclerView;
+    RecyclerView videoRecyclerView;
 
-    public VideoListAdapter(Context context, List<HashMap> items, SimpleExoPlayer player) {
+    public VideoListAdapter(Context context, List<HashMap> items, SimpleExoPlayer player, String activeId, RecyclerView currRecyclerView) {
         this.context = context;
         this.items = items;
         this.player = player;
+        this.activeId = activeId;
+        this.currRecyclerView = currRecyclerView;
+    }
 
+    @Override
+    public void onAttachedToRecyclerView(@NonNull @NotNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        this.videoRecyclerView = recyclerView;
     }
 
     @Override
@@ -48,12 +64,15 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         HashMap item = items.get(position);
-//        constraintLayoutList.add(holder.viewVideo);
+        if (activeId.equals(item.get("videoId").toString()) && lastTappedPosition == -1) {
+            // 현재 보는 동영상 UI 표시
+            holder.viewVideo.setBackgroundColor(context.getResources().getColor(R.color.colorPurpleLight, null));
+        }
 
         holder.textVideoIndex.setText(item.get("index").toString());
         holder.textVideoTitle.setText(item.get("videoTitle").toString());
         holder.textVideoTime.setText("동영상 ~ " + item.get("videoLength").toString());
-//        holder.viewVideo.setBackgroundColor(Color.parseColor("#00FFFFFF"));
+
         if (item.get("seen").toString().equals("Y")) {
             holder.videoSeenCheck.setVisibility(View.VISIBLE);
         }
@@ -61,15 +80,28 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.View
         holder.viewVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("basakcoding", item.get("videoId").toString() + " " + item.get("courseId").toString());
 
+                // 동영상 스위칭
                 MediaItem mediaItem = MediaItem.fromUri(
-                        KEY_BASE_URL + "/upload/course/"+item.get("courseId").toString()+"/video/" + item.get("videoUri").toString());
-//                holder.viewVideo.setBackgroundColor(context.getResources().getColor(R.color.colorAccent, null));
-
+                        KEY_BASE_URL + "/upload/course/" + item.get("courseId").toString() + "/video/" + item.get("videoUri").toString());
                 player.setMediaItem(mediaItem);
+
+                // 현재 보는 동영상 UI 표시
+                holder.viewVideo.setBackgroundColor(context.getResources().getColor(R.color.colorPurpleLight, null));
+
+                CourseVideoActivity.currPlayingVideoId = item.get("videoId").toString();
+                CourseVideoActivity.lastTappedPosition = position;
+                CourseVideoActivity.tappedParentView = videoRecyclerView.getParent();
+                currRecyclerView.getAdapter().notifyDataSetChanged();
             }
         });
+
+        boolean check = true;
+        if (CourseVideoActivity.lastTappedPosition == position && CourseVideoActivity.tappedParentView == videoRecyclerView.getParent()) {
+            holder.viewVideo.setBackgroundColor(context.getResources().getColor(R.color.colorPurpleLight, null));
+        } else if (CourseVideoActivity.lastTappedPosition != -1) {
+            holder.viewVideo.setBackgroundColor(Color.parseColor("#00FFFFFF"));
+        }
     }
 
     @Override

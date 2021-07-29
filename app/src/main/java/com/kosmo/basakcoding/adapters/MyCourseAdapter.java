@@ -61,7 +61,6 @@ public class MyCourseAdapter extends RecyclerView.Adapter<MyCourseAdapter.ViewHo
                 intent.putExtra("ADMIN_NAME", item.get("NAME").toString());
                 intent.putExtra("TITLE", item.get("TITLE").toString());
                 intent.putExtra("COURSE_ID", items.get(position).get("COURSE_ID").toString());
-                intent.putExtra("VIDEO_ID", items.get(position).get("LAST_VIDEO_ID").toString());
                 v.getContext().startActivity(intent);
             }
         });

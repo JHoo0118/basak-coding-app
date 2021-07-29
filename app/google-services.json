@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "754505743943-ff5o3h0p6d4b5na3himrmhc3fldlrn92.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kosmo.basakcoding",
+            "certificate_hash": "6fdc3da67846663ac76a60ac3cca90f26eca4f99"
+          }
+        },
+        {
           "client_id": "754505743943-fveq9o2d9cnku8pbtsvi86o7dq5ai2b8.apps.googleusercontent.com",
           "client_type": 3
         }
