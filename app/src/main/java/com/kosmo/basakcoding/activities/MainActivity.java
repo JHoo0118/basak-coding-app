@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         preferenceManager = new PreferenceManager(getApplicationContext());
         chipNavigationBar = findViewById(R.id.chipNavigationBar);
 
+        chipNavigationBar.setItemSelected(R.id.catalog, true);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, new CatalogFragment(preferenceManager)).commit();
 
         bottomMenu();

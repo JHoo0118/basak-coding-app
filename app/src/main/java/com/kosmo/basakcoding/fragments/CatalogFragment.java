@@ -63,7 +63,6 @@ public class CatalogFragment extends Fragment {
             public void onResponse(Call<List<HashMap>> call, Response<List<HashMap>> response) {
                 if (response.isSuccessful()) {
                     CoursesList = response.body();
-                    Log.i(TAG, CoursesList + "");
                     CoursesAdapter = new CoursesAdapter(getContext(), CoursesList);
 
                     recyclerView.setAdapter(CoursesAdapter);

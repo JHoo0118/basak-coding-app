@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/viewVideo"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="@dimen/_6sdp"
+    tools:context=".fragments.MyCourseFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textVideoIndex"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/notosanskr_bold"
+            android:gravity="center"
+            android:text="1"
+            android:paddingRight="@dimen/_6sdp"
+            android:textColor="@color/colorBlack" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/videoSeenCheck"
+                    android:layout_width="@dimen/_12sdp"
+                    android:layout_height="@dimen/_12sdp"
+                    android:layout_marginRight="@dimen/_4sdp"
+                    android:background="@drawable/ic_check_circle"
+                    android:backgroundTint="@color/colorTextAccent"
+                    android:visibility="gone"
+                    android:padding="@dimen/_3sdp" />
+
+                <TextView
+                    android:id="@+id/textVideoTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/notosanskr_medium"
+                    android:includeFontPadding="false"
+                    android:text="인스타 로그인폼 만들기"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/_13ssp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textVideoTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/notosanskr_medium"
+                android:includeFontPadding="false"
+                android:text="동영상~08:10"
+                android:textColor="@color/colorGray"
+                android:textSize="@dimen/_10ssp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

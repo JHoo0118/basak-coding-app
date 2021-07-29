@@ -3,17 +3,22 @@ package com.kosmo.basakcoding.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.kosmo.basakcoding.R;
 import com.kosmo.basakcoding.models.CurriculumDTO;
 import com.kosmo.basakcoding.service.ApiClient;
 import com.kosmo.basakcoding.service.CoursesService;
-import com.kosmo.basakcoding.service.MyCourseService;
+import com.kosmo.basakcoding.utilities.Constants;
+import com.kosmo.basakcoding.utilities.GlideImageGetter;
 import com.kosmo.basakcoding.utilities.PreferenceManager;
 import com.squareup.picasso.Picasso;
 
@@ -32,9 +37,13 @@ public class CourseDetailActivity extends AppCompatActivity {
     private HashMap courseDetail = new HashMap();
     private CoursesService coursesService;
     private PreferenceManager preferenceManager;
+    private GlideImageGetter glideImageGetter;
 
     ImageView thumbnailImage, backBtnImage;
-    TextView textTitle, textShortDescription;
+    TextView textTitle, textShortDescription, textReview, textReviewCount,
+            textTeacherName, textCreatedAt, textPrice, textDescription,
+            textVideoLength, textVideoCount;
+    RatingBar ratingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,17 +56,18 @@ public class CourseDetailActivity extends AppCompatActivity {
         this.preferenceManager = new PreferenceManager(getApplicationContext());
 
         // 아이디 얻기
-        doIntialize();
+        doInitialize();
 
         backBtnImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+                finish();
             }
         });
 
 
-        Call<HashMap> call = coursesService.getCourseDetail(courseId);
+        Call<HashMap> call = coursesService.getCourseDetail(preferenceManager.getString(Constants.KEY_MEMBER_ID), courseId);
         call.enqueue(new Callback<HashMap>() {
             @Override
             public void onResponse(Call<HashMap> call, Response<HashMap> response) {
@@ -67,7 +77,7 @@ public class CourseDetailActivity extends AppCompatActivity {
 
                     // 강의 썸네일 설정
                     Picasso.get().load(KEY_BASE_URL + "/upload/course/" +
-                            courseId +"/thumbnail/" +
+                            courseId + "/thumbnail/" +
                             courseDetail.get("THUMBNAIL").toString()).into(thumbnailImage);
 
                     // 강의 제목 설정
@@ -76,22 +86,62 @@ public class CourseDetailActivity extends AppCompatActivity {
                     // 강의 요약 설정
                     textShortDescription.setText(courseDetail.get("SHORT_DESCRIPTION").toString());
 
-                    Log.i(TAG, curriculum.toString());
+                    // 강의 별점 설정
+                    String avgRating = courseDetail.get("AVG_RATING").toString();
+                    if (avgRating.equals("NaN")) avgRating = "0.00";
+                    textReview.setText(avgRating);
+                    ratingBar.setRating(Float.parseFloat(avgRating));
+                    textReviewCount.setText("(" + courseDetail.get("REVIEW_COUNT").toString() + "개의 평점)");
+
+                    // 강사 설정
+                    textTeacherName.setText(courseDetail.get("NAME").toString());
+
+                    // 게시 날짜 설정
+                    String createdAt = courseDetail.get("CREATED_AT").toString();
+                    textCreatedAt.setText("게시 날짜: " + createdAt.substring(0, 10));
+
+                    // 가격 설정
+                    textPrice.setText("￦" + courseDetail.get("PRICE").toString());
+
+                    // 동영상 길이
+                    int courseLength = Integer.parseInt(courseDetail.get("COURSE_LENGTH").toString());
+                    int hours = courseLength / 3600;
+                    int mins = courseLength / 60;
+                    int secs = courseLength % 60;
+                    textVideoLength.setText(String.format("%s시간 %s분 %s초", hours, mins, secs));
+
+                    // 동영상 개수
+                    textVideoCount.setText(courseDetail.get("VIDEO_COUNT").toString() + "개의 동영상");
+
+                    // 강의 설명 설정
+                    String description = courseDetail.get("DESCRIPTION").toString();
+                    glideImageGetter = new GlideImageGetter(getApplicationContext(), textDescription);
+                    Spanned htmlSpan = Html.fromHtml(description, Html.FROM_HTML_MODE_LEGACY, glideImageGetter, null);
+                    textDescription.setText(htmlSpan);
                 }
             }
 
             @Override
             public void onFailure(Call<HashMap> call, Throwable t) {
-                Log.i(TAG, "에러:"+t.getMessage());
+                Log.i(TAG, "에러:" + t.getMessage());
             }
         });
     }
 
-    private void doIntialize() {
+    private void doInitialize() {
         // 아이디 얻기
         backBtnImage = findViewById(R.id.imageBack);
         thumbnailImage = findViewById(R.id.imageThumnail);
         textTitle = findViewById(R.id.textTitle);
         textShortDescription = findViewById(R.id.textShortDescription);
+        textReview = findViewById(R.id.textReview);
+        ratingBar = findViewById(R.id.ratingBar);
+        textReviewCount = findViewById(R.id.textReviewCount);
+        textTeacherName = findViewById(R.id.textTeacherName);
+        textCreatedAt = findViewById(R.id.textCreatedAt);
+        textPrice = findViewById(R.id.textPrice);
+        textDescription = findViewById(R.id.textDescription);
+        textVideoLength = findViewById(R.id.textVideoLength);
+        textVideoCount = findViewById(R.id.textVideoCount);
     }
 }

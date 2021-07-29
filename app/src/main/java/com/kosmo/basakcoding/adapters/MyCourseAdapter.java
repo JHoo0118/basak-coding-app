@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.kosmo.basakcoding.R;
 import com.kosmo.basakcoding.activities.CourseDetailActivity;
+import com.kosmo.basakcoding.activities.CourseVideoActivity;
 import com.kosmo.basakcoding.activities.SignUpActivity;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
@@ -56,9 +57,11 @@ public class MyCourseAdapter extends RecyclerView.Adapter<MyCourseAdapter.ViewHo
         holder.viewBackground.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, items.get(position).get("TITLE").toString(), Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(v.getContext(), CourseDetailActivity.class);
+                Intent intent = new Intent(v.getContext(), CourseVideoActivity.class);
+                intent.putExtra("ADMIN_NAME", item.get("NAME").toString());
+                intent.putExtra("TITLE", item.get("TITLE").toString());
                 intent.putExtra("COURSE_ID", items.get(position).get("COURSE_ID").toString());
+                intent.putExtra("VIDEO_ID", items.get(position).get("LAST_VIDEO_ID").toString());
                 v.getContext().startActivity(intent);
             }
         });

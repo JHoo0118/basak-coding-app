@@ -65,6 +65,7 @@ public class MyCourseFragment extends Fragment {
             @Override
             public void onResponse(Call<List<HashMap>> call, Response<List<HashMap>> response) {
                 if (response.isSuccessful()) {
+                    myCourseProgressBar.setVisibility(View.GONE);
                     myCourseList = response.body();
                     myCourseAdapter = new MyCourseAdapter(getContext(), myCourseList);
 
@@ -75,11 +76,11 @@ public class MyCourseFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<HashMap>> call, Throwable t) {
+                myCourseProgressBar.setVisibility(View.GONE);
                 Log.i(TAG, "에러:"+t.getMessage());
             }
         });
 
-        myCourseProgressBar.setVisibility(View.INVISIBLE);
 
 //        ProgressBar courseProgress = (ProgressBar) getView().findViewById(R.id.courseProgress);
 //        courseProgress.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent, getActivity().getTheme())));

@@ -17,18 +17,17 @@
             android:id="@+id/courseDetailHeader"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_30sdp"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/imageBack"
                 android:layout_width="@dimen/_25sdp"
                 android:layout_height="@dimen/_25sdp"
                 android:background="@drawable/ic_back"
-                android:backgroundTint="@color/colorTextAccent"
-                android:padding="@dimen/_3sdp"
-            />
+                android:backgroundTint="@color/colorPurple"
+                android:padding="@dimen/_3sdp" />
         </LinearLayout>
 
         <ImageView
@@ -40,38 +39,332 @@
             app:layout_constraintRight_toRightOf="@+id/courseDetailHeader"
             app:layout_constraintTop_toBottomOf="@+id/courseDetailHeader" />
 
-
-
         <TextView
             android:id="@+id/textTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="@dimen/_16ssp"
-            android:text="인스타 무작정 만들기"
-            android:textStyle="bold"
-            android:textColor="@color/colorBlack"
             android:layout_marginTop="@dimen/_6sdp"
+            android:layout_weight="1"
+            android:fontFamily="@font/notosanskr_bold"
             android:includeFontPadding="false"
-            app:layout_constraintTop_toBottomOf="@id/imageThumnail"
+            android:text="인스타 무작정 만들기"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/_16ssp"
+            android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="@id/imageThumnail"
             app:layout_constraintRight_toRightOf="@id/imageThumnail"
-            />
+            app:layout_constraintTop_toBottomOf="@id/imageThumnail" />
 
         <TextView
             android:id="@+id/textShortDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_6sdp"
             android:layout_weight="1"
-            android:textSize="@dimen/_11ssp"
+            android:fontFamily="@font/notosanskr_medium"
+            android:includeFontPadding="false"
             android:text="인스타를 만들어 봅니다."
             android:textColor="@color/colorBlack"
-            android:layout_marginTop="@dimen/_6sdp"
-            android:includeFontPadding="false"
-            app:layout_constraintTop_toBottomOf="@id/textTitle"
+            android:textSize="@dimen/_11ssp"
             app:layout_constraintLeft_toLeftOf="@id/textTitle"
             app:layout_constraintRight_toRightOf="@id/textTitle"
-            />
+            app:layout_constraintTop_toBottomOf="@id/textTitle" />
+
+        <TextView
+            android:id="@+id/textReview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/_6sdp"
+            android:includeFontPadding="false"
+            android:text="4.7"
+            android:textColor="@color/colorOrange"
+            android:textSize="@dimen/_10ssp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/textShortDescription" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:progressTint="@color/colorOrange"
+            android:rating="3"
+            android:stepSize="1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textReview" />
+
+        <TextView
+            android:id="@+id/textReviewCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/_6sdp"
+            android:includeFontPadding="false"
+            android:text="(1개 평점)"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/_11ssp"
+            app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+
+
+        <LinearLayout
+            android:id="@+id/linearTeacher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/_6sdp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/textReviewCount">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:text="강사"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/_11ssp" />
+
+            <TextView
+                android:id="@+id/textTeacherName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_6sdp"
+                android:includeFontPadding="false"
+                android:text="강사 이름"
+                android:textColor="@color/colorPurple"
+                android:textSize="@dimen/_11ssp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/_6sdp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearTeacher">
+
+
+            <ImageView
+                android:layout_width="@dimen/_12sdp"
+                android:layout_height="@dimen/_12sdp"
+                android:layout_marginRight="@dimen/_4sdp"
+                android:background="@drawable/ic_new_releases"
+                android:backgroundTint="@color/colorBlack"
+                android:padding="@dimen/_3sdp" />
+
+            <TextView
+                android:id="@+id/textCreatedAt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:text="게시 날짜: 2021-07-20"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/_11ssp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLanguage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/_6sdp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearTime">
+
+
+            <ImageView
+                android:layout_width="@dimen/_12sdp"
+                android:layout_height="@dimen/_12sdp"
+                android:layout_marginRight="@dimen/_4sdp"
+                android:background="@drawable/ic_language"
+                android:backgroundTint="@color/colorBlack"
+                android:padding="@dimen/_3sdp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:text="한국어"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/_11ssp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:text="￦120"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/_32ssp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/linearLanguage" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonPurchase"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:backgroundTint="@color/colorPurple"
+            android:fontFamily="@font/notosanskr_bold"
+            android:includeFontPadding="false"
+            android:text="구매하기"
+            android:textColor="@color/colorTextIcons"
+            android:textSize="@dimen/_13ssp"
+            app:layout_constraintTop_toBottomOf="@id/textPrice" />
+
+        <LinearLayout
+            android:id="@+id/linearVideoLength"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/_6sdp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/buttonPurchase">
+
+
+            <ImageView
+                android:layout_width="@dimen/_12sdp"
+                android:layout_height="@dimen/_12sdp"
+                android:layout_marginRight="@dimen/_4sdp"
+                android:background="@drawable/ic_time"
+                android:backgroundTint="@color/colorBlack"
+                android:padding="@dimen/_3sdp" />
+
+            <TextView
+                android:id="@+id/textVideoLength"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:text="총 1시간 21분"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/_11ssp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearVideoCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/_6sdp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearVideoLength">
+
+
+            <ImageView
+                android:layout_width="@dimen/_12sdp"
+                android:layout_height="@dimen/_12sdp"
+                android:layout_marginRight="@dimen/_4sdp"
+                android:background="@drawable/ic_video"
+                android:backgroundTint="@color/colorBlack"
+                android:padding="@dimen/_3sdp" />
+
+            <TextView
+                android:id="@+id/textVideoCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:text="15개의 동영상"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/_11ssp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearSupport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/_6sdp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearVideoCount">
+
+
+            <ImageView
+                android:layout_width="@dimen/_12sdp"
+                android:layout_height="@dimen/_12sdp"
+                android:layout_marginRight="@dimen/_4sdp"
+                android:background="@drawable/ic_support"
+                android:backgroundTint="@color/colorBlack"
+                android:padding="@dimen/_3sdp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:text="모바일 및 데스크톱으로 엑세스"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/_11ssp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearPeriod"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/_6sdp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearSupport">
+
+
+            <ImageView
+                android:layout_width="@dimen/_12sdp"
+                android:layout_height="@dimen/_12sdp"
+                android:layout_marginRight="@dimen/_4sdp"
+                android:background="@drawable/ic_loop"
+                android:backgroundTint="@color/colorBlack"
+                android:padding="@dimen/_3sdp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:text="무제한"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/_11ssp" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/textDescriptionTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_weight="1"
+            android:fontFamily="@font/notosanskr_bold"
+            android:includeFontPadding="false"
+            android:text="강의 설명"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/_16ssp"
+            android:textStyle="bold"
+
+            app:layout_constraintLeft_toLeftOf="@id/linearPeriod"
+            app:layout_constraintRight_toRightOf="@id/linearPeriod"
+            app:layout_constraintTop_toBottomOf="@id/linearPeriod" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:background="#22999999"
+            android:paddingHorizontal="@dimen/_6sdp"
+            app:layout_constraintLeft_toLeftOf="@id/textDescriptionTitle"
+            app:layout_constraintRight_toRightOf="@id/textDescriptionTitle"
+            app:layout_constraintTop_toBottomOf="@id/textDescriptionTitle">
+
+            <TextView
+                android:id="@+id/textDescription"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:layout_weight="1"
+                android:fontFamily="@font/notosanskr_medium"
+                android:includeFontPadding="false"
+                android:text="인스타를 바로 만들어봅니다."
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/_11ssp" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
