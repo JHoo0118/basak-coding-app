@@ -18,11 +18,12 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="회원정보 수정"
+            android:layout_gravity="center"
+            android:text="마이페이지"
             android:textSize="@dimen/_15ssp"
             android:textStyle="bold"
+            android:textColor="@color/black"
             android:layout_marginTop="@dimen/_15sdp"
-            android:layout_marginLeft="@dimen/_110sdp"
             />
     </LinearLayout>
 
@@ -32,16 +33,23 @@
         android:gravity="center"
         android:id="@+id/Image1"
         app:layout_constraintTop_toBottomOf="@id/View1"
+        android:paddingTop="@dimen/_10sdp"
+        android:orientation="vertical"
         >
         <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/thumbnail"
-            android:layout_width="@dimen/_70sdp"
-            android:layout_height="@dimen/_70sdp"/>
+            android:id="@+id/profile"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_100sdp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="기본 이미지로 변경"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_250sdp"
+        android:layout_height="@dimen/_270sdp"
         android:orientation="vertical"
         android:id="@+id/View2"
         app:layout_constraintTop_toBottomOf="@id/Image1">
@@ -50,20 +58,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_marginLeft="@dimen/_25sdp"
             app:layout_constraintTop_toBottomOf="@id/View1">
             <TextView
                 android:layout_width="@dimen/_75sdp"
                 android:layout_height="wrap_content"
                 android:text="닉네임"
                 android:textColor="@color/black"
-                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 />
             <EditText
                 android:id="@+id/textUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="10"
+                android:ems="15"
                 android:text="닉네임"
                 android:inputType="textPersonName"/>
         </LinearLayout>
@@ -72,7 +80,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_marginLeft="@dimen/_25sdp"
             app:layout_constraintTop_toBottomOf="@id/View1">
             <TextView
                 android:layout_width="@dimen/_75sdp"
@@ -81,12 +89,13 @@
                 android:textColor="@color/black"
                 android:layout_marginTop="@dimen/_10sdp"/>
 
-            <EditText
+            <TextView
                 android:id="@+id/textEmail"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/_240sdp"
                 android:layout_height="wrap_content"
-                android:ems="10"
                 android:text="이메일"
+                android:textColor="@color/black"
+                android:textSize="18dp"
                 android:inputType="textEmailAddress" />
 
 
@@ -95,7 +104,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_marginLeft="@dimen/_25sdp"
             app:layout_constraintTop_toBottomOf="@id/View1">
             <TextView
                 android:layout_width="@dimen/_75sdp"
@@ -105,10 +114,10 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 />
             <EditText
-                android:id="@+id/join_password"
+                android:id="@+id/password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="10"
+                android:ems="15"
                 android:hint="비밀번호"
                 android:inputType="textPassword"
                  />
@@ -118,7 +127,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_marginLeft="@dimen/_25sdp"
             app:layout_constraintTop_toBottomOf="@id/View1">
             <TextView
                 android:layout_width="@dimen/_75sdp"
@@ -127,13 +136,13 @@
                 android:textColor="@color/black"
                 android:layout_marginTop="@dimen/_10sdp"/>
             <EditText
-                android:id="@+id/join_pwck"
+                android:id="@+id/pwck"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:text="비밀번호 확인"
+                android:ems="15"
                 android:inputType="textPassword"
                 />
+
 
         </LinearLayout>
 
@@ -142,41 +151,25 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_50sdp"
+        android:layout_height="@dimen/_80sdp"
         android:gravity="center"
         android:id="@+id/View3"
         app:layout_constraintTop_toBottomOf="@id/View2">
 
         <Button
-            android:id="@+id/join_button"
+            android:id="@+id/logoutBtn"
+            style="@style/defaultButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="로그아웃" />
+        <Button
+            android:id="@+id/updateBtn"
             style="@style/defaultButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="수정" />
-        <Button
-            android:id="@+id/delete"
-            style="@style/defaultButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="저장" />
-
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/View3"
-        >
-        <Button
-            android:id="@+id/logoutBtn"
-            android:layout_width="280dp"
-            android:layout_height="50dp"
-            android:backgroundTint="#E1E1E1"
-            android:text="로그아웃"
-            android:textColor="@color/colorPrimary"
-            />
-    </LinearLayout>
 
 
 
