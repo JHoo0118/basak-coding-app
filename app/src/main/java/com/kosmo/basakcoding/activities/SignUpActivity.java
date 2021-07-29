@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
@@ -16,14 +17,27 @@ import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.kosmo.basakcoding.R;
+import com.kosmo.basakcoding.service.ApiClient;
+import com.kosmo.basakcoding.service.AuthService;
 import com.kosmo.basakcoding.utilities.Constants;
 import java.util.HashMap;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
 
     private EditText inputUsername, inputEmail, inputPassword, inputConfirmPassword;
     private MaterialButton buttonSignUp;
     private ProgressBar signUpProgressBar;
+    private AuthService authService;
+
+
+    public SignUpActivity() {
+        authService = ApiClient.getRetrofit().create(AuthService.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +88,56 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
+    private void signUp(){
+        buttonSignUp.setVisibility(View.INVISIBLE);
+        signUpProgressBar.setVisibility(View.VISIBLE);
+        HashMap map = new HashMap();
+        String email= inputEmail.getText().toString().trim();
+        String username = inputUsername.getText().toString().trim();
+        String password = inputPassword.getText().toString().trim();
+        map.put("email",email);
+        map.put("username",username);
+        map.put("password",password);
+        Call<Integer> call = authService.signUp(map);
+        call.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.isSuccessful()) {
+                    if(response.body()==-1){
+
+                        signUpProgressBar.setVisibility(View.GONE);
+                        buttonSignUp.setVisibility(View.VISIBLE);
+                        Log.i("com.kosmo.basakcoding.activities","이메일중복");
+                        Toast.makeText(SignUpActivity.this,"이미 사용 중인 이메일 입니다.",Toast.LENGTH_SHORT).show();
+                    }
+                    else if(response.body()==1){
+                        Log.i("com.kosmo.basakcoding.activities","성공");
+                        signUpProgressBar.setVisibility(View.GONE);
+                        buttonSignUp.setVisibility(View.VISIBLE);
+                        Toast.makeText(SignUpActivity.this,"회원가입이 완료되었습니다.",Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.putExtra("newEmail",email);
+                        startActivity(intent);
+                    }
+                    else {
+                        Log.i("com.kosmo.basakcoding.activities","실패");
+                        signUpProgressBar.setVisibility(View.GONE);
+                        buttonSignUp.setVisibility(View.VISIBLE);
+                        Toast.makeText(SignUpActivity.this, "회원가입에 실패했습니다. 다시시도해주세요", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+                signUpProgressBar.setVisibility(View.GONE);
+                buttonSignUp.setVisibility(View.VISIBLE);
+                Toast.makeText(SignUpActivity.this,"관리자에게 문의해주세요.",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    /*
     private void signUp() {
         buttonSignUp.setVisibility(View.INVISIBLE);
         signUpProgressBar.setVisibility(View.VISIBLE);
@@ -104,4 +168,5 @@ public class SignUpActivity extends AppCompatActivity {
                     }
                 });
     }
+     */
 }

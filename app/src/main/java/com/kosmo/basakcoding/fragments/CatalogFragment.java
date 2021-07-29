@@ -1,8 +1,10 @@
 package com.kosmo.basakcoding.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,14 +12,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
+import android.widget.GridView;
 
 import com.kosmo.basakcoding.R;
+import com.kosmo.basakcoding.adapters.BestAdapter;
 import com.kosmo.basakcoding.adapters.CoursesAdapter;
-import com.kosmo.basakcoding.adapters.MyCourseAdapter;
 import com.kosmo.basakcoding.service.ApiClient;
 import com.kosmo.basakcoding.service.CoursesService;
-import com.kosmo.basakcoding.service.MyCourseService;
 import com.kosmo.basakcoding.utilities.PreferenceManager;
 
 import java.util.ArrayList;
@@ -27,8 +28,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.kosmo.basakcoding.utilities.Constants.KEY_MEMBER_ID;
 
 public class CatalogFragment extends Fragment {
 
@@ -58,7 +57,6 @@ public class CatalogFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.Course);
 
-
         Call<List<HashMap>> call = CoursesService.getCoursesList();
         call.enqueue(new Callback<List<HashMap>>() {
             @Override
@@ -69,6 +67,7 @@ public class CatalogFragment extends Fragment {
 
                     recyclerView.setAdapter(CoursesAdapter);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
                 }
             }
 

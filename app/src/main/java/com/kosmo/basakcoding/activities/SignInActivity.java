@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -99,6 +100,13 @@ public class SignInActivity extends AppCompatActivity {
         });
 
         // 구글 계정으로 로그인 끝
+
+        Intent signUpintent = getIntent();
+        if(!TextUtils.isEmpty(signUpintent.getStringExtra("newEmail"))){
+            String email = signUpintent.getStringExtra("newEmail");
+            inputEmail = findViewById(R.id.inputEmail);
+            inputEmail.setText(String.valueOf(email));
+        }
 
         preferenceManager = new PreferenceManager(getApplicationContext());
 

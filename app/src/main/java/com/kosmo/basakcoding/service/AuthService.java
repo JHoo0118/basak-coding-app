@@ -13,4 +13,7 @@ import retrofit2.http.POST;
 public interface AuthService {
     @POST("login")
     Call<MemberDTO> login(@Body LoginDTO dto);
+
+    @POST("signUp")
+    Call<Integer> signUp(@Body HashMap map);
 }

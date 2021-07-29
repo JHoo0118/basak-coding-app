@@ -7,6 +7,7 @@
 <!--    android:layout_height="match_parent"-->
 <!--    tools:context=".fragments.MyCourseFragment">-->
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -14,13 +15,13 @@
         tools:context=".fragments.MyCourseFragment"
         android:id="@+id/parent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/myCourseRV"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="@dimen/_480sdp"
             android:clipToPadding="false"
             android:orientation="vertical"
             android:padding="@dimen/_4sdp"
