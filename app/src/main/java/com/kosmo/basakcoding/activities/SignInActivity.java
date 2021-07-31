@@ -54,7 +54,7 @@ import retrofit2.Response;
 public class SignInActivity extends AppCompatActivity {
 
     public static final String TAG = "basakcoding";
-    public static final int RC_SIGN_IN = 100;
+    
     private AuthService authService;
     private FirebaseAuth mAuth;
     private GoogleSignInClient googleSignInClient;
@@ -101,12 +101,15 @@ public class SignInActivity extends AppCompatActivity {
 
         // 구글 계정으로 로그인 끝
 
+        // 회원가입 시 이메일 받기 시작
         Intent signUpintent = getIntent();
         if(!TextUtils.isEmpty(signUpintent.getStringExtra("newEmail"))){
             String email = signUpintent.getStringExtra("newEmail");
             inputEmail = findViewById(R.id.inputEmail);
             inputEmail.setText(String.valueOf(email));
         }
+
+        // 회원가입 시 이메일 받기 끝
 
         preferenceManager = new PreferenceManager(getApplicationContext());
 
@@ -180,7 +183,7 @@ public class SignInActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<MemberDTO> call, Throwable t) {
-                Log.i(TAG, t.getMessage());
+                Log.i(TAG, "에러:" + t.getMessage());
                 signInProgressBar.setVisibility(View.INVISIBLE);
                 buttonSignIn.setVisibility(View.VISIBLE);
                 Toast.makeText(SignInActivity.this, "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
@@ -203,20 +206,37 @@ public class SignInActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    Log.i(TAG, result.getResultCode() + "");
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
-
-                        Log.i(TAG, "여기");
+                        
                         try {
                             GoogleSignInAccount account = task.getResult(ApiException.class);
-                            firebaseAuthWithGoogle(account.getIdToken());
-                            preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
-                            preferenceManager.putString(Constants.KEY_MEMBER_ID, account.getId().substring(0, 6));
-                            preferenceManager.putString(Constants.KEY_USERNAME, account.getDisplayName());
-                            preferenceManager.putString(Constants.KEY_EMAIL, account.getEmail());
-                            preferenceManager.putString(Constants.KEY_GOOGLE_LOGIN, "Y");
-                            Log.i(TAG, account.getId() + " " + account.getDisplayName() + " " + account.getEmail());
+                            
+                            // retrofit2
+                            HashMap params = new HashMap();
+                            params.put("email", account.getEmail());
+                            params.put("username", account.getDisplayName());
+                            Call<Integer> check = authService.googleSignUp(params);
+                            check.enqueue(new Callback<Integer>() {
+                                @Override
+                                public void onResponse(Call<Integer> call, Response<Integer> response) {
+                                    if (response.isSuccessful()) {
+                                        Log.i(TAG, response.body().toString());
+                                        firebaseAuthWithGoogle(account.getIdToken());
+                                        preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
+                                        preferenceManager.putString(Constants.KEY_MEMBER_ID, response.body().toString());
+                                        preferenceManager.putString(Constants.KEY_USERNAME, account.getDisplayName());
+                                        preferenceManager.putString(Constants.KEY_EMAIL, account.getEmail());
+                                        preferenceManager.putString(Constants.KEY_GOOGLE_LOGIN, "Y");
+                                    }
+                                }
+                                @Override
+                                public void onFailure(Call<Integer> call, Throwable t) {
+                                    Log.i(TAG, "에러:" + t.getMessage());
+                                }
+                            });
+                            
+
                         } catch (ApiException e) {
                             Log.i(TAG, "구글 로그인 실패:" + e);
                         }
@@ -237,7 +257,6 @@ public class SignInActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);

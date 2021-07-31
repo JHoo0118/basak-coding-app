@@ -16,4 +16,7 @@ public interface AuthService {
 
     @POST("signUp")
     Call<Integer> signUp(@Body HashMap map);
+
+    @POST("google")
+    Call<Integer> googleSignUp(@Body HashMap map);
 }

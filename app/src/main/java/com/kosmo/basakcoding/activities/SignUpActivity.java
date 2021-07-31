@@ -104,16 +104,11 @@ public class SignUpActivity extends AppCompatActivity {
             public void onResponse(Call<Integer> call, Response<Integer> response) {
                 if (response.isSuccessful()) {
                     if(response.body()==-1){
-
-                        signUpProgressBar.setVisibility(View.GONE);
-                        buttonSignUp.setVisibility(View.VISIBLE);
                         Log.i("com.kosmo.basakcoding.activities","이메일중복");
                         Toast.makeText(SignUpActivity.this,"이미 사용 중인 이메일 입니다.",Toast.LENGTH_SHORT).show();
                     }
                     else if(response.body()==1){
                         Log.i("com.kosmo.basakcoding.activities","성공");
-                        signUpProgressBar.setVisibility(View.GONE);
-                        buttonSignUp.setVisibility(View.VISIBLE);
                         Toast.makeText(SignUpActivity.this,"회원가입이 완료되었습니다.",Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -122,10 +117,10 @@ public class SignUpActivity extends AppCompatActivity {
                     }
                     else {
                         Log.i("com.kosmo.basakcoding.activities","실패");
-                        signUpProgressBar.setVisibility(View.GONE);
-                        buttonSignUp.setVisibility(View.VISIBLE);
                         Toast.makeText(SignUpActivity.this, "회원가입에 실패했습니다. 다시시도해주세요", Toast.LENGTH_SHORT).show();
                     }
+                    signUpProgressBar.setVisibility(View.GONE);
+                    buttonSignUp.setVisibility(View.VISIBLE);
                 }
             }
 

@@ -96,90 +96,84 @@ public class MyPageFragment extends Fragment {
                         .show();
             }
         });
-        Log.i(TAG, "뭐야:" + preferenceManager.getString(KEY_GOOGLE_LOGIN));
-        if (preferenceManager.getString(KEY_GOOGLE_LOGIN).equals("Y")) {
-            if (textUserName.getText().toString().trim().equals("닉네임")) {
-                textUserName.setText(preferenceManager.getString(KEY_USERNAME));
-                if (textEmail.getText().toString().trim().equals("이메일")) {
-                    textEmail.setText(preferenceManager.getString(KEY_EMAIL));
+
+        Call<HashMap> call = myPageService.getMyPageList(preferenceManager.getString(KEY_MEMBER_ID));
+        call.enqueue(new Callback<HashMap>() {
+            @Override
+            public void onResponse(Call<HashMap> call, Response<HashMap> response) {
+                if (response.isSuccessful()) {
+                    MyPage = response.body();
+                    Log.i(TAG, MyPage.toString());
+
+                    textUserName.setText(MyPage.get("USERNAME").toString());
+                    textEmail.setText(MyPage.get("EMAIL").toString());
+
+                    Picasso.get().load(KEY_BASE_URL + "/upload/member/" +
+                            MyPage.get("MEMBER_ID").toString() + "/" +
+                            MyPage.get("AVATAR").toString())
+                            .placeholder(R.drawable.image4)
+                            .into(profile);
                 }
-            } else {
-                Call<HashMap> call = myPageService.getMyPageList(preferenceManager.getString(KEY_MEMBER_ID));
-                call.enqueue(new Callback<HashMap>() {
-                    @Override
-                    public void onResponse(Call<HashMap> call, Response<HashMap> response) {
-                        if (response.isSuccessful()) {
-                            MyPage = response.body();
-
-                            textUserName.setText(MyPage.get("USERNAME").toString());
-                            textEmail.setText(MyPage.get("EMAIL").toString());
-
-                            Picasso.get().load(KEY_BASE_URL + "/upload/member/" +
-                                    MyPage.get("MEMBER_ID").toString() + "/" +
-                                    MyPage.get("AVATAR").toString()).into(profile);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<HashMap> call, Throwable t) {
-                        Log.i(TAG, "에러:" + t.getMessage());
-                    }
-                });
             }
-            updateBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new AlertDialog.Builder(getContext())
-                            .setTitle("회원정보 수정")
-                            .setMessage("수정 하시겠습니까?")
-                            .setPositiveButton("예", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
 
-                                    TextView username = view.findViewById(R.id.textUserName);
-                                    TextView password = view.findViewById(R.id.password);
-                                    TextView pwck = view.findViewById(R.id.pwck);
-                                    Log.i(TAG, "username, password, pwck" + password.getText().toString().trim().equals(pwck.getText()));
+            @Override
+            public void onFailure(Call<HashMap> call, Throwable t) {
+                Log.i(TAG, "에러:" + t.getMessage());
+            }
+        });
 
-                                    if (password.getText().toString().trim().equals(pwck.getText().toString().trim())) {
-                                        Map map = new HashMap();
-                                        map.put("memberId", preferenceManager.getString(KEY_MEMBER_ID));
-                                        map.put("username", username.getText().toString());
-                                        map.put("password", password.getText().toString());
+        updateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(getContext())
+                        .setTitle("회원정보 수정")
+                        .setMessage("수정 하시겠습니까?")
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
-                                        Call<HashMap> update = myPageService.updateMember(map);
-                                        update.enqueue(new Callback<HashMap>() {
-                                            @Override
-                                            public void onResponse(Call<HashMap> call, Response<HashMap> response) {
-                                                if (response.isSuccessful()) {
-                                                    UpDate = response.body();
-                                                    Log.i(TAG, UpDate + "");
+                                TextView username = view.findViewById(R.id.textUserName);
+                                TextView password = view.findViewById(R.id.password);
+                                TextView pwck = view.findViewById(R.id.pwck);
+                                Log.i(TAG, "username, password, pwck" + password.getText().toString().trim().equals(pwck.getText()));
 
-                                                    textUserName.setText(UpDate.get("username").toString());
-                                                    textEmail.setText(MyPage.get("EMAIL").toString());
+                                if (password.getText().toString().trim().equals(pwck.getText().toString().trim())) {
+                                    Map map = new HashMap();
+                                    map.put("memberId", preferenceManager.getString(KEY_MEMBER_ID));
+                                    map.put("username", username.getText().toString());
+                                    map.put("password", password.getText().toString());
 
+                                    Call<HashMap> update = myPageService.updateMember(map);
+                                    update.enqueue(new Callback<HashMap>() {
+                                        @Override
+                                        public void onResponse(Call<HashMap> call, Response<HashMap> response) {
+                                            if (response.isSuccessful()) {
+                                                UpDate = response.body();
+                                                Log.i(TAG, UpDate + "");
 
-                                                }
+                                                textUserName.setText(UpDate.get("username").toString());
+                                                textEmail.setText(MyPage.get("EMAIL").toString());
+
                                             }
+                                        }
 
-                                            @Override
-                                            public void onFailure(Call<HashMap> call, Throwable t) {
-                                                Log.i(TAG, "에러:" + t.getMessage());
+                                        @Override
+                                        public void onFailure(Call<HashMap> call, Throwable t) {
+                                            Log.i(TAG, "에러:" + t.getMessage());
 
-                                            }
-                                        });
-                                    } else {
-                                        Log.i(TAG, "회원정보수정실패");
-                                    }
+                                        }
+                                    });
+                                } else {
+                                    Log.i(TAG, "회원정보수정실패");
                                 }
-                            })
-                            .setNegativeButton("아니요", null)
-                            .show();
-                }
-            });
+                            }
+                        })
+                        .setNegativeButton("아니요", null)
+                        .show();
+            }
+        });
 //        ProgressBar courseProgress = (ProgressBar) getView().findViewById(R.id.courseProgress);
 //        courseProgress.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent, getActivity().getTheme())));
 
-        }
     }
 }

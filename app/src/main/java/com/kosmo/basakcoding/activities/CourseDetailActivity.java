@@ -8,6 +8,7 @@ import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -37,19 +38,24 @@ public class CourseDetailActivity extends AppCompatActivity {
     private CoursesService coursesService;
     private PreferenceManager preferenceManager;
     private GlideImageGetter glideImageGetter;
+    private int isPurchased = 0;
+    private String name = null;
+    private String title = null;
+    private String courseId = null;
 
     ImageView thumbnailImage, backBtnImage;
     TextView textTitle, textShortDescription, textReview, textReviewCount,
             textTeacherName, textCreatedAt, textPrice, textDescription,
             textVideoLength, textVideoCount;
     RatingBar ratingBar;
+    Button buttonPurchase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_detail);
         Intent intent = getIntent();
-        String courseId = intent.getStringExtra("COURSE_ID");
+        courseId = intent.getStringExtra("COURSE_ID");
 
         coursesService = ApiClient.getRetrofit().create(CoursesService.class);
         this.preferenceManager = new PreferenceManager(getApplicationContext());
@@ -74,6 +80,10 @@ public class CourseDetailActivity extends AppCompatActivity {
                     courseDetail = response.body();
                     List<CurriculumDTO> curriculum = (List<CurriculumDTO>) courseDetail.get("curriculum");
 
+
+                    isPurchased = Integer.parseInt(courseDetail.get("ALREADY_PAYMENT").toString());
+                    if (isPurchased == 1) buttonPurchase.setText("강의 보러가기");
+
                     // 강의 썸네일 설정
                     Picasso.get().load(KEY_BASE_URL + "/upload/course/" +
                             courseId + "/thumbnail/" +
@@ -81,6 +91,7 @@ public class CourseDetailActivity extends AppCompatActivity {
 
                     // 강의 제목 설정
                     textTitle.setText(courseDetail.get("TITLE").toString());
+                    title = courseDetail.get("TITLE").toString();
 
                     // 강의 요약 설정
                     textShortDescription.setText(courseDetail.get("SHORT_DESCRIPTION").toString());
@@ -94,6 +105,7 @@ public class CourseDetailActivity extends AppCompatActivity {
 
                     // 강사 설정
                     textTeacherName.setText(courseDetail.get("NAME").toString());
+                    name = courseDetail.get("NAME").toString();
 
                     // 게시 날짜 설정
                     String createdAt = courseDetail.get("CREATED_AT").toString();
@@ -125,6 +137,22 @@ public class CourseDetailActivity extends AppCompatActivity {
                 Log.i(TAG, "에러:" + t.getMessage());
             }
         });
+
+        buttonPurchase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isPurchased == 0) {
+
+                } else if (isPurchased == 1) {
+                    Intent intent = new Intent(v.getContext(), CourseVideoActivity.class);
+                    intent.putExtra("ADMIN_NAME", name);
+                    intent.putExtra("TITLE", title);
+                    intent.putExtra("COURSE_ID", courseId);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
     }
 
     private void doInitialize() {
@@ -142,5 +170,6 @@ public class CourseDetailActivity extends AppCompatActivity {
         textDescription = findViewById(R.id.textDescription);
         textVideoLength = findViewById(R.id.textVideoLength);
         textVideoCount = findViewById(R.id.textVideoCount);
+        buttonPurchase = findViewById(R.id.buttonPurchase);
     }
 }
