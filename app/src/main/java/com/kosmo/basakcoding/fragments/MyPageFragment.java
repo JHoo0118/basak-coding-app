@@ -108,11 +108,16 @@ public class MyPageFragment extends Fragment {
                     textUserName.setText(MyPage.get("USERNAME").toString());
                     textEmail.setText(MyPage.get("EMAIL").toString());
 
-                    Picasso.get().load(KEY_BASE_URL + "/upload/member/" +
-                            MyPage.get("MEMBER_ID").toString() + "/" +
-                            MyPage.get("AVATAR").toString())
+                    if (MyPage.get("AVATAR") != null) {
+                        Picasso.get().load(KEY_BASE_URL + "/upload/member/" +
+                                MyPage.get("MEMBER_ID").toString() + "/" +
+                                MyPage.get("AVATAR").toString())
+                                .into(profile);
+                    } else {Picasso.get().load(R.drawable.image4)
                             .placeholder(R.drawable.image4)
                             .into(profile);
+                    }
+
                 }
             }
 

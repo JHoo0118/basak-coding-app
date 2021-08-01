@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.kosmo.basakcoding.R;
 import com.kosmo.basakcoding.adapters.MyCourseAdapter;
@@ -39,6 +41,9 @@ public class MyCourseFragment extends Fragment {
     private MyCourseAdapter myCourseAdapter;
     private ProgressBar myCourseProgressBar;
 
+    private LinearLayout noCourseLinear;
+    private TextView textNoCourse;
+
     public MyCourseFragment(PreferenceManager preferenceManager) {
             myCourseService = ApiClient.getRetrofit().create(MyCourseService.class);
             this.preferenceManager = preferenceManager;
@@ -53,6 +58,8 @@ public class MyCourseFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        noCourseLinear = view.findViewById(R.id.noCourseLinear);
+        textNoCourse = view.findViewById(R.id.textNoCourse);
 
         recyclerView = view.findViewById(R.id.myCourseRV);
         myCourseProgressBar = view.findViewById(R.id.myCoursePB);
@@ -64,6 +71,10 @@ public class MyCourseFragment extends Fragment {
             @Override
             public void onResponse(Call<List<HashMap>> call, Response<List<HashMap>> response) {
                 if (response.isSuccessful()) {
+                    Log.i(TAG, response.body().size()+"");
+                    if (response.body().size() > 0) {
+                        noCourseLinear.setVisibility(View.GONE);
+                    }
                     myCourseProgressBar.setVisibility(View.GONE);
                     myCourseList = response.body();
                     myCourseAdapter = new MyCourseAdapter(getContext(), myCourseList);
